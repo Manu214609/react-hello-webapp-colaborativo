@@ -1,29 +1,35 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
+
 import { Context } from "../store/appContext";
+
 import "../../styles/demo.css";
 
 export const EditForm = () => {
 	const { store, actions } = useContext(Context);
+	const [fullName, setFullName] = useState ("Nombre");
+	const [emailAddress, setEmailAddress] = useState ("Email");
+	const [phoneNumber, setPhoneNumber] = useState ("Telefono");
+	const [streetAddress, setStreetAddress] = useState ("Address");
 	const { id } = useParams();
-	const [fullname, setFullName] = useState("Nombre");
-	const [emailAdress, setEmailAdress] = useState("Email");
-	const [phoneNumber, setPhoneNumber] = useState("Telefono");
-	const [streetAddress, setStreetAddress] = useState("Address");
+	console.log(id);
 
-	useEffect(() => {
+	useEffect (() => {
 		actions.getSingleContact(id);
-		setFullName(store.contact.full_name);
-		setEmailAdress(store.contact.email);
+		setFullName(store.contact.fullName);
+		setEmailAddress(store.contact.email);
 		setPhoneNumber(store.contact.phone);
 		setStreetAddress(store.contact.address);
-	}, [id, store.contact]); // Agregué 'id' y 'store.contact' como dependencias
+
+	}, []);
 
 	const handleSubmit = e => {
-		e.preventDefault(); // Corregido el método preventDefault
-		actions.editContact(fullname, emailAdress, streetAddress, phoneNumber, id); // Agregué 'id' como argumento
-		setFullName("");
-		setEmailAdress("");
+		e.preventDefault();//este no siempre hace falta con React
+		actions.editContact(fullName, emailAddress, streetAddress, phoneNumber, id);
+		/* console.log(fullName); */
+		
+		setFullName("");//limpiar input
+		setEmailAddress("");
 		setPhoneNumber("");
 		setStreetAddress("");
 	}
@@ -32,56 +38,64 @@ export const EditForm = () => {
 		<div className="container">
 			<form onSubmit={handleSubmit}>
 				<div className="mb-3">
-					<label htmlFor="exampleInputEmail1" className="form-label">Full name</label>
+					<label htmlFor="inputName" className="form-label"><em>Full Name</em></label>
 					<input 
-						type="text" 
-						className="form-control" 
-						id="exampleInputEmail1" 
-						aria-describedby="emailHelp" 
-						value={fullname}
-						onChange={e => setFullName(e.target.value)}
-						placeholder="manuela"
+					type="text"
+					className="form-control"
+					id="exampleInputEmail"
+					aria-describedby="emailHelp"
+					value={fullName} //asignar valor
+					onChange={e => setFullName(e.target.value)}
+					placeholder="Jhon Wick"
 					/>
+				</div>
+
+				<div className="mb-3">
+					<label htmlFor="exampleinputPassword" className="form-label"><em>Email</em></label>
+					<input 
+					type="email"
+					className="form-control"
+					id="exampleInputPassword"
+					value={emailAddress} //asignar valor
+					onChange={e => setEmailAddress(e.target.value)}
+					placeholder="Jhon@noemail.com"
+					/>
+					
 				</div>
 				<div className="mb-3">
-					<label htmlFor="exampleInputPassword1" className="form-label">Email</label>
+					<label htmlFor="exampleInputPassword" className="form-label"><em>Phone Number</em></label>
 					<input 
-						type="email" 
-						className="form-control" 
-						id="exampleInputPassword1"
-						value={emailAdress}
-						onChange={e => setEmailAdress(e.target.value)}
-						placeholder="email"
+					type="text"
+					className="form-control"
+					id="exampleInputPassword"
+					value={phoneNumber} //asignar valor
+					onChange={e => setPhoneNumber(e.target.value)}
+					placeholder="666.222.222"
 					/>
+					
 				</div>
 				<div className="mb-3">
-					<label htmlFor="exampleInputPassword1" className="form-label">Phone Number</label>
+					<label htmlFor="emailAddress" className="form-label"><em>Street Address</em></label>
 					<input 
-						type="text" 
-						className="form-control" 
-						id="exampleInputPassword1"
-						value={phoneNumber}
-						onChange={e => setPhoneNumber(e.target.value)}
-						placeholder="numero" 
+					type="text"
+					className="form-control"
+					id="streetAddress"
+					value={streetAddress} //asignar valor
+					onChange={e => setStreetAddress(e.target.value)}
+					placeholder="c/ 34 san jose spain"
 					/>
+					
 				</div>
-				<div className="mb-3">
-					<label htmlFor="exampleInputPassword1" className="form-label">Address</label>
-					<input 
-						type="text" 
-						className="form-control" 
-						id="exampleInputPassword1"
-						value={streetAddress}
-						onChange={e => setStreetAddress(e.target.value)}
-						placeholder="calle ejemplo" 
-					/>
-				</div>
-				<button type="submit" className="btn btn-primary">Submit</button>
+				<button type="submit" className="btn btn-primary">Save</button>
 			</form>
-			<button onClick={() => console.log(fullname)}>mostrar datos</button>
-			<Link to="/">
-				<button>Back home</button>
-			</Link>
+			
+			
+			<br/>
+
+				  {<Link to="/">
+				<button className="btn btn-link">or get back to contacts.</button>
+			</Link>}
+		
 		</div>
 	);
 };
